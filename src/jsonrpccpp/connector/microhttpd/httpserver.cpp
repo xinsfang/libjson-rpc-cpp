@@ -9,11 +9,10 @@
 
 #include "httpserver.h"
 #include <cstdlib>
+#include <fstream>
 #include <iostream>
-#include <jsonrpccpp/common/specificationparser.h>
 #include <sstream>
 #include <string>
-#include <fstream>
 
 using namespace jsonrpc;
 using namespace std;
@@ -33,35 +32,25 @@ void GetFileContent(const string &filename, string &target) {
 
   if (config) {
     config.open(filename.c_str(), ios::in);
-    target.assign((std::istreambuf_iterator<char>(config)),
-                  (std::istreambuf_iterator<char>()));
+    target.assign((std::istreambuf_iterator<char>(config)), (std::istreambuf_iterator<char>()));
   } else {
     target = "";
   }
 }
 
-
-HttpServer::HttpServer(int port, const std::string &sslcert,
-                       const std::string &sslkey, int threads)
-    : AbstractServerConnector(), port(port), threads(threads), running(false),
-      path_sslcert(sslcert), path_sslkey(sslkey), daemon(NULL) {}
-
-IClientConnectionHandler *HttpServer::GetHandler(const std::string &url) {
-  if (AbstractServerConnector::GetHandler() != NULL)
-    return AbstractServerConnector::GetHandler();
-  map<string, IClientConnectionHandler *>::iterator it =
-      this->urlhandler.find(url);
-  if (it != this->urlhandler.end())
-    return it->second;
-  return NULL;
-}
+HttpServer::HttpServer(int port, const std::string &sslcert, const std::string &sslkey, int threads)
+    : AbstractServerConnector(),
+      port(port),
+      threads(threads),
+      running(false),
+      path_sslcert(sslcert),
+      path_sslkey(sslkey),
+      daemon(NULL) {}
 
 bool HttpServer::StartListening() {
   if (!this->running) {
-    const bool has_epoll =
-        (MHD_is_feature_supported(MHD_FEATURE_EPOLL) == MHD_YES);
-    const bool has_poll =
-        (MHD_is_feature_supported(MHD_FEATURE_POLL) == MHD_YES);
+    const bool has_epoll = (MHD_is_feature_supported(MHD_FEATURE_EPOLL) == MHD_YES);
+    const bool has_poll = (MHD_is_feature_supported(MHD_FEATURE_POLL) == MHD_YES);
     unsigned int mhd_flags;
     if (has_epoll)
 // In MHD version 0.9.44 the flag is renamed to
@@ -82,19 +71,15 @@ bool HttpServer::StartListening() {
         return false;
       }
 
-      this->daemon = MHD_start_daemon(
-          MHD_USE_SSL | mhd_flags, this->port, NULL, NULL,
-          HttpServer::callback, this, MHD_OPTION_HTTPS_MEM_KEY,
-          this->sslkey.c_str(), MHD_OPTION_HTTPS_MEM_CERT,
-          this->sslcert.c_str(), MHD_OPTION_THREAD_POOL_SIZE, this->threads,
-          MHD_OPTION_END);
+      this->daemon =
+          MHD_start_daemon(MHD_USE_SSL | mhd_flags, this->port, NULL, NULL, HttpServer::callback, this,
+                           MHD_OPTION_HTTPS_MEM_KEY, this->sslkey.c_str(), MHD_OPTION_HTTPS_MEM_CERT,
+                           this->sslcert.c_str(), MHD_OPTION_THREAD_POOL_SIZE, this->threads, MHD_OPTION_END);
     } else {
-      this->daemon = MHD_start_daemon(
-          mhd_flags, this->port, NULL, NULL, HttpServer::callback, this,
-          MHD_OPTION_THREAD_POOL_SIZE, this->threads, MHD_OPTION_END);
+      this->daemon = MHD_start_daemon(mhd_flags, this->port, NULL, NULL, HttpServer::callback, this,
+                                      MHD_OPTION_THREAD_POOL_SIZE, this->threads, MHD_OPTION_END);
     }
-    if (this->daemon != NULL)
-      this->running = true;
+    if (this->daemon != NULL) this->running = true;
   }
   return this->running;
 }
@@ -108,47 +93,34 @@ bool HttpServer::StopListening() {
 }
 
 bool HttpServer::SendResponse(const string &response, void *addInfo) {
-  struct mhd_coninfo *client_connection =
-      static_cast<struct mhd_coninfo *>(addInfo);
-  struct MHD_Response *result = MHD_create_response_from_buffer(
-      response.size(), (void *)response.c_str(), MHD_RESPMEM_MUST_COPY);
+  struct mhd_coninfo *client_connection = static_cast<struct mhd_coninfo *>(addInfo);
+  struct MHD_Response *result =
+      MHD_create_response_from_buffer(response.size(), (void *)response.c_str(), MHD_RESPMEM_MUST_COPY);
 
   MHD_add_response_header(result, "Content-Type", "application/json");
   MHD_add_response_header(result, "Access-Control-Allow-Origin", "*");
 
-  int ret = MHD_queue_response(client_connection->connection,
-                               client_connection->code, result);
+  int ret = MHD_queue_response(client_connection->connection, client_connection->code, result);
   MHD_destroy_response(result);
   return ret == MHD_YES;
 }
 
 bool HttpServer::SendOptionsResponse(void *addInfo) {
-  struct mhd_coninfo *client_connection =
-      static_cast<struct mhd_coninfo *>(addInfo);
-  struct MHD_Response *result =
-      MHD_create_response_from_buffer(0, NULL, MHD_RESPMEM_MUST_COPY);
+  struct mhd_coninfo *client_connection = static_cast<struct mhd_coninfo *>(addInfo);
+  struct MHD_Response *result = MHD_create_response_from_buffer(0, NULL, MHD_RESPMEM_MUST_COPY);
 
   MHD_add_response_header(result, "Allow", "POST, OPTIONS");
   MHD_add_response_header(result, "Access-Control-Allow-Origin", "*");
-  MHD_add_response_header(result, "Access-Control-Allow-Headers",
-                          "origin, content-type, accept");
+  MHD_add_response_header(result, "Access-Control-Allow-Headers", "origin, content-type, accept");
   MHD_add_response_header(result, "DAV", "1");
 
-  int ret = MHD_queue_response(client_connection->connection,
-                               client_connection->code, result);
+  int ret = MHD_queue_response(client_connection->connection, client_connection->code, result);
   MHD_destroy_response(result);
   return ret == MHD_YES;
 }
 
-void HttpServer::SetUrlHandler(const string &url,
-                               IClientConnectionHandler *handler) {
-  this->urlhandler[url] = handler;
-  this->SetHandler(NULL);
-}
-
-int HttpServer::callback(void *cls, MHD_Connection *connection, const char *url,
-                         const char *method, const char *version,
-                         const char *upload_data, size_t *upload_data_size,
+int HttpServer::callback(void *cls, MHD_Connection *connection, const char *url, const char *method,
+                         const char *version, const char *upload_data, size_t *upload_data_size,
                          void **con_cls) {
   (void)version;
   if (*con_cls == NULL) {
@@ -158,8 +130,7 @@ int HttpServer::callback(void *cls, MHD_Connection *connection, const char *url,
     *con_cls = client_connection;
     return MHD_YES;
   }
-  struct mhd_coninfo *client_connection =
-      static_cast<struct mhd_coninfo *>(*con_cls);
+  struct mhd_coninfo *client_connection = static_cast<struct mhd_coninfo *>(*con_cls);
 
   if (string("POST") == method) {
     if (*upload_data_size != 0) {
@@ -167,16 +138,12 @@ int HttpServer::callback(void *cls, MHD_Connection *connection, const char *url,
       *upload_data_size = 0;
       return MHD_YES;
     } else {
-      string response;
-      IClientConnectionHandler *handler =
-          client_connection->server->GetHandler(string(url));
-      if (handler == NULL) {
+      string response = client_connection->server->ProcessRequest(client_connection->request.str());
+      if (response == "") {
         client_connection->code = MHD_HTTP_INTERNAL_SERVER_ERROR;
-        client_connection->server->SendResponse(
-            "No client connection handler found", client_connection);
+        client_connection->server->SendResponse("No client connection handler found", client_connection);
       } else {
         client_connection->code = MHD_HTTP_OK;
-        handler->HandleRequest(client_connection->request.str(), response);
         client_connection->server->SendResponse(response, client_connection);
       }
     }
@@ -185,8 +152,7 @@ int HttpServer::callback(void *cls, MHD_Connection *connection, const char *url,
     client_connection->server->SendOptionsResponse(client_connection);
   } else {
     client_connection->code = MHD_HTTP_METHOD_NOT_ALLOWED;
-    client_connection->server->SendResponse("Not allowed HTTP Method",
-                                            client_connection);
+    client_connection->server->SendResponse("Not allowed HTTP Method", client_connection);
   }
   delete client_connection;
   *con_cls = NULL;
