@@ -92,23 +92,25 @@ include_directories("${CMAKE_BINARY_DIR}/gen/")
 include_directories("${CMAKE_BINARY_DIR}/gen/jsonrpccpp/common")
 
 # the core framework
-add_subdirectory(src/jsonrpccpp)
+#add_subdirectory(src/jsonrpccpp)
+
+add_subdirectory(src/connector/microhttpd)
 
 #the stubgenerator
-if (COMPILE_STUBGEN)
-    add_subdirectory(src/stubgenerator)
-endif()
+# if (COMPILE_STUBGEN)
+#     add_subdirectory(src/stubgenerator)
+# endif()
 
 # setup examples
-if (COMPILE_EXAMPLES)
-    add_subdirectory(src/examples)
-endif()
+# if (COMPILE_EXAMPLES)
+#     add_subdirectory(src/examples)
+# endif()
 
 # setup test suite
-if (COMPILE_TESTS)
-	enable_testing()
-	add_subdirectory(src/test)
-endif()
+# if (COMPILE_TESTS)
+# 	enable_testing()
+# 	add_subdirectory(src/test)
+# endif()
 
 # create documentation
 if (DOXYGEN_FOUND)
