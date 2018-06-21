@@ -1,21 +1,5 @@
 #pragma once
 
-#include <stdarg.h>
-#include <stdint.h>
-#include <sys/types.h>
-
-#if defined(_WIN32) && !defined(__CYGWIN__)
-#include <ws2tcpip.h>
-#if defined(_MSC_FULL_VER) && !defined(_SSIZE_T_DEFINED)
-#define _SSIZE_T_DEFINED
-typedef intptr_t ssize_t;
-#endif  // !_SSIZE_T_DEFINED */
-#else
-#include <sys/socket.h>
-#include <sys/time.h>
-#include <unistd.h>
-#endif
-
 #include <jsonrpccpp/connector/abstractserverconnector.h>
 #include <microhttpd.h>
 #include <map>
