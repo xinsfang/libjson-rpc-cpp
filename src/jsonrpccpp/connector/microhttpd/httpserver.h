@@ -21,7 +21,7 @@ class HttpServer : public AbstractServerConnector {
    * @param sslcert - defines the path to a SSL certificate, if this path is !=
    * "", then SSL/HTTPS is used with the given certificate.
    */
-  HttpServer(int port, const std::string &sslcert = "", const std::string &sslkey = "", int threads = 50);
+  HttpServer(int port, const std::string &sslcert = "", const std::string &sslkey = "");
 
   virtual bool StartListening();
   virtual bool StopListening();
@@ -32,7 +32,6 @@ class HttpServer : public AbstractServerConnector {
 
  private:
   int port;
-  int threads;
   bool running;
   std::string path_sslcert;
   std::string path_sslkey;

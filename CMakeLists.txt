@@ -7,9 +7,17 @@ set(MINOR_VERSION 0)
 set(PATCH_VERSION 0)
 set(SO_VERSION    2)
 
+option(COMPILE_TESTS "compile with testing support" ON)
 option(CONNECTOR_MICROHTTPD "libmicrohttpd based ServerConnector" ON)
 
 include_directories("src")
+
+
+if(COMPILE_TESTS)
+  enable_testing()
+  include_directories("src/test")
+endif()
+
 
 if(CONNECTOR_MICROHTTPD)
   add_subdirectory(src/jsonrpccpp/connector/microhttpd)
