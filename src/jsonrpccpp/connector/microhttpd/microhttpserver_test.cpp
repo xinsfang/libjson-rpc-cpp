@@ -116,6 +116,7 @@ TEST_CASE("https_valid_startup", TEST_MODULE) {
 
     handler.response = "This is a microhttpd response";
     REQUIRE(ExecutePostRequest(CLIENT_URL, "This is a curl request") == handler.response);
+    REQUIRE(handler.request == "This is a curl request");
     server.StopListening();
   }
 }
