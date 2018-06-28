@@ -7,25 +7,30 @@
             "osx": {
                 "command": "mkdir",
                 "args": [
-                    "-p", "build-osx"
+                    "-p",
+                    "build"
                 ]
             },
             "linux": {
                 "command": "mkdir",
                 "args": [
-                    "-p", "build-linux"
+                    "-p",
+                    "build"
                 ]
             },
             "windows": {
                 "command": "New-Item -ItemType Directory -Force -Path",
                 "args": [
-                    "-ItemType", "Directory", "-Force", "-Path", "build-windows"
+                    "-ItemType",
+                    "Directory",
+                    "-Force",
+                    "-Path",
+                    "build"
                 ]
             },
             "problemMatcher": [],
             "group": "build"
         },
-
         {
             "label": "cmake",
             "type": "shell",
@@ -34,19 +39,13 @@
                 "args": [
                     "-DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake",
                     ".."
-                ],
-                "options": {
-                    "cwd": "build-windows"
-                }
+                ]
             },
             "osx": {
                 "args": [
                     "-DCMAKE_TOOLCHAIN_FILE=/Users/cinemast/vcpkg/scripts/buildsystems/vcpkg.cmake",
                     ".."
-                ],
-                "options": {
-                    "cwd": "build-osx"
-                }
+                ]
             },
             "args": [
                 "-G",
@@ -64,27 +63,13 @@
             "type": "shell",
             "command": "cmake",
             "args": [
-                "--build", "."
+                "--build",
+                "."
             ],
-            "linux": {
-                "options": {
-                    "cwd": "build-linux"
-                }
+            "options": {
+                "cwd": "${workspaceFolder}/build"
             },
-            "osx": {
-                "options": {
-                    "cwd": "build-osx"
-                }
-            },
-            "windows": {
-                "options": {
-                    "cwd": "build-windows"
-                }
-            },
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
+            "group": "build",
             "problemMatcher": [
                 "$gcc"
             ]
@@ -99,20 +84,8 @@
                 "3",
                 "."
             ],
-            "linux": {
-                "options": {
-                    "cwd": "build-linux"
-                }
-            },
-            "osx": {
-                "options": {
-                    "cwd": "build-osx"
-                }
-            },
-            "windows": {
-                "options": {
-                    "cwd": "build-windows"
-                }
+            "options": {
+                "cwd": "${workspaceFolder}/build"
             },
             "group": {
                 "kind": "test",
