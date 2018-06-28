@@ -1,13 +1,4 @@
-/*************************************************************************
- * libjson-rpc-cpp
- *************************************************************************
- * @file    httpserver.cpp
- * @date    31.12.2012
- * @author  Peter Spiess-Knafl <dev@spiessknafl.at>
- * @license See attached LICENSE.txt
- ************************************************************************/
-
-#include "httpserver.h"
+#include "microhttpserver.h"
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
@@ -23,11 +14,12 @@ struct mhd_coninfo {
   struct MHD_PostProcessor *postprocessor;
   MHD_Connection *connection;
   stringstream request;
-  HttpServer *server;
+  MicroHttpServer *server;
   int code;
 };
 
-void GetFileContent(const string &filename, string &target) {
+std::string GetFileContent(const string &filename) {
+  string target;
   ifstream config(filename.c_str());
 
   if (config) {
@@ -36,37 +28,46 @@ void GetFileContent(const string &filename, string &target) {
   } else {
     target = "";
   }
+  return target;
 }
 
-HttpServer::HttpServer(int port, const std::string &sslcert, const std::string &sslkey)
+MicroHttpServer::MicroHttpServer(int port)
     : AbstractServerConnector(),
       port(port),
       running(false),
-      path_sslcert(sslcert),
-      path_sslkey(sslkey),
+      enableTLS(false),
+      sslcert(""),
+      sslkey(""),
       daemon(NULL) {}
 
-bool HttpServer::StartListening() {
+bool MicroHttpServer::EnableTLS(const std::string &sslcert, const std::string &sslkey) {
+
+  if (this->running) {
+    return false;
+  }
+
+  this->sslcert = GetFileContent(sslcert);
+  this->sslkey = GetFileContent(sslkey);
+
+  if (MHD_is_feature_supported(MHD_FEATURE_TLS) != MHD_YES && this->sslcert != "" && this->sslkey != "") {
+    this->enableTLS = true;
+    return true;
+  }
+
+  return false;
+}
+
+bool MicroHttpServer::StartListening() {
   unsigned int mhd_flags = MHD_USE_THREAD_PER_CONNECTION;
   if (!this->running) {
-    if (this->path_sslcert != "" && this->path_sslkey != "") {
-      if (MHD_is_feature_supported(MHD_FEATURE_TLS) != MHD_YES) {
-        return false;
-      }
-
-      GetFileContent(this->path_sslcert, this->sslcert);
-      GetFileContent(this->path_sslkey, this->sslkey);
-
-      if (this->sslcert == "" || this->sslkey == "") {
-        return false;
-      }
-
-      this->daemon = MHD_start_daemon(MHD_USE_TLS | mhd_flags, this->port, NULL, NULL, HttpServer::callback,
-                                      this, MHD_OPTION_HTTPS_MEM_KEY, this->sslkey.c_str(),
+    if (this->enableTLS) {
+      mhd_flags |= MHD_USE_TLS;
+      this->daemon = MHD_start_daemon(mhd_flags, this->port, NULL, NULL, MicroHttpServer::callback, this,
+                                      MHD_OPTION_HTTPS_MEM_KEY, this->sslkey.c_str(),
                                       MHD_OPTION_HTTPS_MEM_CERT, this->sslcert.c_str(), MHD_OPTION_END);
     } else {
-      this->daemon =
-          MHD_start_daemon(mhd_flags, this->port, NULL, NULL, HttpServer::callback, this, MHD_OPTION_END);
+      this->daemon = MHD_start_daemon(mhd_flags, this->port, NULL, NULL, MicroHttpServer::callback, this,
+                                      MHD_OPTION_END);
     }
 
     if (this->daemon != NULL) {
@@ -77,7 +78,7 @@ bool HttpServer::StartListening() {
   return false;
 }
 
-bool HttpServer::StopListening() {
+bool MicroHttpServer::StopListening() {
   if (this->running) {
     MHD_stop_daemon(this->daemon);
     this->running = false;
@@ -86,7 +87,7 @@ bool HttpServer::StopListening() {
   return false;
 }
 
-bool HttpServer::SendResponse(const string &response, void *addInfo) {
+bool MicroHttpServer::SendResponse(const string &response, void *addInfo) {
   struct mhd_coninfo *client_connection = static_cast<struct mhd_coninfo *>(addInfo);
   struct MHD_Response *result =
       MHD_create_response_from_buffer(response.size(), (void *)response.c_str(), MHD_RESPMEM_MUST_COPY);
@@ -99,7 +100,7 @@ bool HttpServer::SendResponse(const string &response, void *addInfo) {
   return ret == MHD_YES;
 }
 
-bool HttpServer::SendOptionsResponse(void *addInfo) {
+bool MicroHttpServer::SendOptionsResponse(void *addInfo) {
   struct mhd_coninfo *client_connection = static_cast<struct mhd_coninfo *>(addInfo);
   struct MHD_Response *result = MHD_create_response_from_buffer(0, NULL, MHD_RESPMEM_MUST_COPY);
 
@@ -113,14 +114,14 @@ bool HttpServer::SendOptionsResponse(void *addInfo) {
   return ret == MHD_YES;
 }
 
-int HttpServer::callback(void *cls, MHD_Connection *connection, const char *url, const char *method,
-                         const char *version, const char *upload_data, size_t *upload_data_size,
-                         void **con_cls) {
+int MicroHttpServer::callback(void *cls, MHD_Connection *connection, const char *url, const char *method,
+                              const char *version, const char *upload_data, size_t *upload_data_size,
+                              void **con_cls) {
   (void)version;
   if (*con_cls == NULL) {
     struct mhd_coninfo *client_connection = new mhd_coninfo;
     client_connection->connection = connection;
-    client_connection->server = static_cast<HttpServer *>(cls);
+    client_connection->server = static_cast<MicroHttpServer *>(cls);
     *con_cls = client_connection;
     return MHD_YES;
   }
