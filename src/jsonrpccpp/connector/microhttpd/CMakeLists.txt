@@ -8,8 +8,10 @@ target_link_libraries(jsonrpccpp-connector-microhttpd ${MHD_LIBRARIES})
 
 if(COMPILE_TESTS)
   find_package(CURL REQUIRED)
-  #find_package(Catch2 CONFIG REQUIRED)
   include_directories(${CURL_INCLUDE_DIR})
+
+  file(COPY ${CMAKE_SOURCE_DIR}/src/examples/server.key ${CMAKE_SOURCE_DIR}/src/examples/server.pem DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
 
   add_executable(jsonrpccpp-connector-microhttpd-test httpserver_test.cpp)
   target_link_libraries(jsonrpccpp-connector-microhttpd-test PRIVATE jsonrpccpp-connector-microhttpd ${CURL_LIBRARIES})

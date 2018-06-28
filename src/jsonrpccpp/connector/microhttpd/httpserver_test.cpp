@@ -67,23 +67,47 @@ size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp) {
   return size * nmemb;
 }
 
-TEST_CASE_METHOD(F, "http_post", TEST_MODULE) {
-  handler.response = "This is a microhttpd response";
+string ExecutePostRequest(const string &url, const string &content) {
+  string response;
   CURL *curl = curl_easy_init();
 
-  string response;
-
   curl_easy_setopt(curl, CURLOPT_URL, CLIENT_URL);
-  curl_easy_setopt(curl, CURLOPT_POSTFIELDS, "This is a curl request");
+  curl_easy_setopt(curl, CURLOPT_POSTFIELDS, content.c_str());
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
   curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+  curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
+  curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, false);
 
   CURLcode result = curl_easy_perform(curl);
 
   REQUIRE(result == CURLE_OK);
+  curl_easy_cleanup(curl);
+
+  return response;
+}
+
+TEST_CASE_METHOD(F, "http_post", TEST_MODULE) {
+  handler.response = "This is a microhttpd response";
+
+  string response = ExecutePostRequest(CLIENT_URL, "This is a curl request");
 
   REQUIRE(handler.request == "This is a curl request");
   REQUIRE(response == handler.response);
+}
 
-  curl_easy_cleanup(curl);
+TEST_CASE("http_tls_invalid_startup", TEST_MODULE) {
+  HttpServer server(TEST_PORT, "/a/b/c", "/d/e/f");
+  REQUIRE(server.StartListening() == false);
+}
+
+TEST_CASE("http_tls_valid_startup", TEST_MODULE) {
+  HttpServer server(TEST_PORT, "server.pem", "server.key");
+  TestClienctConnectionHandler handler;
+  server.AddConnectionHandler(handler);
+
+  REQUIRE(server.StartListening() == true);
+
+  handler.response = "This is a microhttpd response";
+  REQUIRE(ExecutePostRequest(CLIENT_URL, "This is a curl request") == handler.response);
+  server.StopListening();
 }
