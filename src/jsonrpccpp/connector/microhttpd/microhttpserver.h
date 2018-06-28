@@ -16,11 +16,15 @@ namespace jsonrpc {
     /**
      * @brief MicroHttpServer, constructor for the included libmicrohttpd based HttpServer
      * @param port on which the server is listening
-     * @param sslcert defines the path to a SSL certificate, if this path is != "", then SSL/HTTPS is used
-     * @param sslcert defines the path to a SSL key, if this path is != "", then SSL/HTTPS is used
-     */
+    */
     MicroHttpServer(int port);
 
+    /**
+     * @brief enable TLS support of libmicrohttpd through gnutls.
+     * @param sslcert defines the path to a SSL certificate
+     * @param sslcert defines the path to a SSL key
+     * @return true on success, false if one of the paths was invalid or libmicrohttpd does not support TLS
+     */
     bool EnableTLS(const std::string &sslcert, const std::string &sslkey);
 
     virtual bool StartListening();

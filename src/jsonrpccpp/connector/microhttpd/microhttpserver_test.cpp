@@ -107,11 +107,10 @@ TEST_CASE("https_valid_startup", TEST_MODULE) {
     WARN("HTTPS won't be tested due to missing TLS support in libmicrohttpd");
   } else {
     MicroHttpServer server(TEST_PORT);
-    server.EnableTLS("server.pem", "server.key");
-
     TestClienctConnectionHandler handler;
     server.AddConnectionHandler(handler);
 
+    REQUIRE(server.EnableTLS("server.pem", "server.key") == true);
     REQUIRE(server.StartListening() == true);
 
     handler.response = "This is a microhttpd response";
