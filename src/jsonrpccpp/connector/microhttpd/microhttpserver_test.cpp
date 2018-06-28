@@ -5,7 +5,7 @@
 #include <string>
 
 #include "TestClientConnectionHandler.h"
-#include "httpserver.h"
+#include "microhttpserver.h"
 
 using namespace jsonrpc;
 using namespace std;
@@ -16,7 +16,7 @@ using namespace std;
 #define CLIENT_URL "http://localhost:8383"
 
 struct F {
-  HttpServer server;
+  MicroHttpServer server;
   TestClienctConnectionHandler handler;
   F() : server(TEST_PORT) {
     server.AddConnectionHandler(handler);
@@ -88,26 +88,34 @@ string ExecutePostRequest(const string &url, const string &content) {
 
 TEST_CASE_METHOD(F, "http_post", TEST_MODULE) {
   handler.response = "This is a microhttpd response";
-
   string response = ExecutePostRequest(CLIENT_URL, "This is a curl request");
 
   REQUIRE(handler.request == "This is a curl request");
   REQUIRE(response == handler.response);
 }
 
-TEST_CASE("http_tls_invalid_startup", TEST_MODULE) {
-  HttpServer server(TEST_PORT, "/a/b/c", "/d/e/f");
-  REQUIRE(server.StartListening() == false);
+TEST_CASE("https_invalid_paths", TEST_MODULE) {
+  MicroHttpServer server(TEST_PORT);
+  REQUIRE(server.EnableTLS("/a/b/c", "/d/e/f") == false);
+  REQUIRE(server.StartListening() == true);
+  REQUIRE(server.EnableTLS("server.pem", "server.key") == false);
+  server.StopListening();
 }
 
-TEST_CASE("http_tls_valid_startup", TEST_MODULE) {
-  HttpServer server(TEST_PORT, "server.pem", "server.key");
-  TestClienctConnectionHandler handler;
-  server.AddConnectionHandler(handler);
+TEST_CASE("https_valid_startup", TEST_MODULE) {
+  if (!MHD_is_feature_supported(MHD_FEATURE_SSL)) {
+    WARN("HTTPS won't be tested due to missing TLS support in libmicrohttpd");
+  } else {
+    MicroHttpServer server(TEST_PORT);
+    server.EnableTLS("server.pem", "server.key");
 
-  REQUIRE(server.StartListening() == true);
+    TestClienctConnectionHandler handler;
+    server.AddConnectionHandler(handler);
 
-  handler.response = "This is a microhttpd response";
-  REQUIRE(ExecutePostRequest(CLIENT_URL, "This is a curl request") == handler.response);
-  server.StopListening();
+    REQUIRE(server.StartListening() == true);
+
+    handler.response = "This is a microhttpd response";
+    REQUIRE(ExecutePostRequest(CLIENT_URL, "This is a curl request") == handler.response);
+    server.StopListening();
+  }
 }
