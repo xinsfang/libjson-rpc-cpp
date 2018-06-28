@@ -34,7 +34,6 @@ CMakeCache.txt
 
 
 # Visual Studio files
-/.vscode
 *.sln
 *.vcxproj
 *.suo
