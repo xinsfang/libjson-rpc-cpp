@@ -1,8 +1,8 @@
 #pragma once
 
-#include <jsonrpccpp/connector/abstractserverconnector.h>
 #include <microhttpd.h>
 #include <map>
+#include "../abstractserverconnector.h"
 
 namespace jsonrpc {
 /**

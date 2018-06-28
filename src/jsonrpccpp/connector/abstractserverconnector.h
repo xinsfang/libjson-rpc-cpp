@@ -1,9 +1,9 @@
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
-#include <jsonrpccpp/connector/iclientconnectionhandler.h>
+#include "iclientconnectionhandler.h"
 
 namespace jsonrpc {
 
@@ -18,12 +18,12 @@ class AbstractServerConnector {
 
   std::string ProcessRequest(const std::string& request) {
     std::string result = "";
-    /*for (auto handler : connectionHandlers) {
-      result = handler.HandleRequest(request);
+    for (auto handler : connectionHandlers) {
+      result = handler->HandleRequest(request);
       if (result != "") {
         return result;
       }
-    }*/
+    }
     return result;
   }
 

@@ -2,6 +2,8 @@
 #include <curl/curl.h>
 #include <catch.hpp>
 
+#include <string>
+
 #include "TestClientConnectionHandler.h"
 #include "httpserver.h"
 
@@ -60,18 +62,28 @@ TEST_CASE_METHOD(F, "http_options", TEST_MODULE) {
   curl_easy_cleanup(curl);
 }
 
-TEST_CASE_METHOD(F, "http_post", TEST_MODULE)
-{
+size_t WriteCallback(char *contents, size_t size, size_t nmemb, void *userp) {
+  ((std::string *)userp)->append((char *)contents, size * nmemb);
+  return size * nmemb;
+}
+
+TEST_CASE_METHOD(F, "http_post", TEST_MODULE) {
   handler.response = "This is a microhttpd response";
   CURL *curl = curl_easy_init();
+
+  string response;
+
   curl_easy_setopt(curl, CURLOPT_URL, CLIENT_URL);
   curl_easy_setopt(curl, CURLOPT_POSTFIELDS, "This is a curl request");
-   
+  curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+  curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+
   CURLcode result = curl_easy_perform(curl);
 
   REQUIRE(result == CURLE_OK);
 
   REQUIRE(handler.request == "This is a curl request");
+  REQUIRE(response == handler.response);
 
   curl_easy_cleanup(curl);
 }

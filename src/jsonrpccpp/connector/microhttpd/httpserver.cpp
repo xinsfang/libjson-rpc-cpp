@@ -49,7 +49,6 @@ HttpServer::HttpServer(int port, const std::string &sslcert, const std::string &
 bool HttpServer::StartListening() {
   unsigned int mhd_flags = MHD_USE_THREAD_PER_CONNECTION;
   if (!this->running) {
-
     if (this->path_sslcert != "" && this->path_sslkey != "") {
       if (MHD_is_feature_supported(MHD_FEATURE_TLS) != MHD_YES) {
         return false;
@@ -62,10 +61,9 @@ bool HttpServer::StartListening() {
         return false;
       }
 
-      this->daemon =
-          MHD_start_daemon(MHD_USE_TLS | mhd_flags, this->port, NULL, NULL, HttpServer::callback, this,
-                           MHD_OPTION_HTTPS_MEM_KEY, this->sslkey.c_str(), MHD_OPTION_HTTPS_MEM_CERT,
-                           this->sslcert.c_str(), MHD_OPTION_END);
+      this->daemon = MHD_start_daemon(MHD_USE_TLS | mhd_flags, this->port, NULL, NULL, HttpServer::callback,
+                                      this, MHD_OPTION_HTTPS_MEM_KEY, this->sslkey.c_str(),
+                                      MHD_OPTION_HTTPS_MEM_CERT, this->sslcert.c_str(), MHD_OPTION_END);
     } else {
       this->daemon =
           MHD_start_daemon(mhd_flags, this->port, NULL, NULL, HttpServer::callback, this, MHD_OPTION_END);
