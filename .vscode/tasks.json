@@ -2,6 +2,31 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "create-build",
+            "type": "shell",
+            "osx": {
+                "command": "mkdir",
+                "args": [
+                    "-p", "build-osx"
+                ]
+            },
+            "linux": {
+                "command": "mkdir",
+                "args": [
+                    "-p", "build-linux"
+                ]
+            },
+            "windows": {
+                "command": "New-Item -ItemType Directory -Force -Path",
+                "args": [
+                    "-ItemType", "Directory", "-Force", "-Path", "build-windows"
+                ]
+            },
+            "problemMatcher": [],
+            "group": "build"
+        },
+
+        {
             "label": "cmake",
             "type": "shell",
             "command": "cmake",
@@ -10,44 +35,89 @@
                     "-DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake",
                     ".."
                 ],
+                "options": {
+                    "cwd": "build-windows"
+                }
+            },
+            "osx": {
+                "args": [
+                    "-DCMAKE_TOOLCHAIN_FILE=/Users/cinemast/vcpkg/scripts/buildsystems/vcpkg.cmake",
+                    ".."
+                ],
+                "options": {
+                    "cwd": "build-osx"
+                }
             },
             "args": [
-                "-G", "Ninja"
+                "-G",
+                "Ninja"
             ],
             "options": {
                 "cwd": "${workspaceFolder}/build"
             },
-            "group": "build"
+            "group": "build",
+            "dependsOn": "create-build",
+            "problemMatcher": []
         },
         {
-            "label": "ninja",
+            "label": "build",
             "type": "shell",
             "command": "cmake",
             "args": [
-                "--build", "${workspaceFolder}/build"
+                "--build", "."
             ],
+            "linux": {
+                "options": {
+                    "cwd": "build-linux"
+                }
+            },
+            "osx": {
+                "options": {
+                    "cwd": "build-osx"
+                }
+            },
+            "windows": {
+                "options": {
+                    "cwd": "build-windows"
+                }
+            },
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
             "problemMatcher": [
-                "$msCompile"
+                "$gcc"
             ]
-        }, 
+        },
         {
             "label": "test",
             "type": "shell",
             "command": "ctest",
             "args": [
-                "-V", "--timeout", "3", "."
+                "-V",
+                "--timeout",
+                "3",
+                "."
             ],
-            "options": {
-                "cwd": "build"
+            "linux": {
+                "options": {
+                    "cwd": "build-linux"
+                }
+            },
+            "osx": {
+                "options": {
+                    "cwd": "build-osx"
+                }
+            },
+            "windows": {
+                "options": {
+                    "cwd": "build-windows"
+                }
             },
             "group": {
                 "kind": "test",
                 "isDefault": true
-            },
+            }
         }
     ]
 }
