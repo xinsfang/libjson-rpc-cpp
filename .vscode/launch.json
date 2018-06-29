@@ -11,9 +11,9 @@
             "program": "${workspaceFolder}/build/src/jsonrpccpp/connector/microhttpd/jsonrpccpp-connector-microhttpd-test",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/build/src/jsonrpccpp/connector/microhttpd",
             "environment": [],
-            "externalConsole": true,
+            "externalConsole": false,
             "MIMode": "lldb"
         },
         {

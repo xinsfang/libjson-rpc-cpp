@@ -42,14 +42,14 @@ MicroHttpServer::MicroHttpServer(int port)
 
 bool MicroHttpServer::EnableTLS(const std::string &sslcert, const std::string &sslkey) {
 
-  if (this->running) {
+  if (this->running || MHD_is_feature_supported(MHD_FEATURE_TLS) != MHD_YES) {
     return false;
   }
-
+  
   this->sslcert = GetFileContent(sslcert);
   this->sslkey = GetFileContent(sslkey);
 
-  if (MHD_is_feature_supported(MHD_FEATURE_TLS) != MHD_YES && this->sslcert != "" && this->sslkey != "") {
+  if (this->sslcert != "" && this->sslkey != "") {
     this->enableTLS = true;
     return true;
   }

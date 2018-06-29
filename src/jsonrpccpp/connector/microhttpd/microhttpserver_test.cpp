@@ -71,7 +71,7 @@ string ExecutePostRequest(const string &url, const string &content) {
   string response;
   CURL *curl = curl_easy_init();
 
-  curl_easy_setopt(curl, CURLOPT_URL, CLIENT_URL);
+  curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
   curl_easy_setopt(curl, CURLOPT_POSTFIELDS, content.c_str());
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
   curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
@@ -108,13 +108,13 @@ TEST_CASE("https_valid_startup", TEST_MODULE) {
   } else {
     MicroHttpServer server(TEST_PORT);
     TestClienctConnectionHandler handler;
+    handler.response = "This is a microhttpd response";
     server.AddConnectionHandler(handler);
 
     REQUIRE(server.EnableTLS("server.pem", "server.key") == true);
     REQUIRE(server.StartListening() == true);
 
-    handler.response = "This is a microhttpd response";
-    REQUIRE(ExecutePostRequest(CLIENT_URL, "This is a curl request") == handler.response);
+    REQUIRE(ExecutePostRequest("https://localhost:8383", "This is a curl request") == handler.response);
     REQUIRE(handler.request == "This is a curl request");
     server.StopListening();
   }
