@@ -1,6 +1,6 @@
 #pragma once
 
-#include <jsonrpccpp/connector/iclientconnectionhandler.h>
+#include "iclientconnectionhandler.h"
 #include <chrono>
 #include <thread>
 

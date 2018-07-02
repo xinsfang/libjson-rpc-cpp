@@ -118,6 +118,7 @@ int MicroHttpServer::callback(void *cls, MHD_Connection *connection, const char 
                               const char *version, const char *upload_data, size_t *upload_data_size,
                               void **con_cls) {
   (void)version;
+  (void)url;
   if (*con_cls == NULL) {
     struct mhd_coninfo *client_connection = new mhd_coninfo;
     client_connection->connection = connection;
