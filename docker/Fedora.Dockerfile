@@ -8,7 +8,7 @@ RUN dnf -y install \
     libmicrohttpd-devel \
     catch-devel \
     git \
-    ninja \ 
+    ninja-build \ 
     cmake \
     make \
     argtable-devel \

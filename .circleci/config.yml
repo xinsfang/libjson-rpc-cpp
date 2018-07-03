@@ -1,5 +1,7 @@
 jobs:
   debian10:
+    image: circleci/android:latest
     steps:
       - setup_remote_docker
-      - cd docker && make debian10
+      - checkout
+      - run: cd docker && make debian10
