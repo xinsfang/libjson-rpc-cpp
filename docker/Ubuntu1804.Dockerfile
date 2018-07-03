@@ -1,6 +1,6 @@
-FROM debian:9
+FROM ubuntu:18.04
 MAINTAINER Peter Spiess-Knafl <dev@spiessknafl.at>
-ENV OS=debian9
+ENV OS=ubuntu1804
 
 COPY docker/install_debs.sh /install_debs.sh
 RUN chmod a+x /install_debs.sh

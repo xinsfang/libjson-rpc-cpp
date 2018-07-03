@@ -7,7 +7,7 @@ set(MINOR_VERSION 0)
 set(PATCH_VERSION 0)
 set(SO_VERSION    2)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 option(COMPILE_TESTS "compile with testing support" ON)
@@ -24,6 +24,7 @@ endif()
 
 if(COMPILE_TESTS)
   enable_testing()
+  include_directories(${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include)
 endif()
 
 if(CONNECTOR_MICROHTTPD)

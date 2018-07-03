@@ -13,7 +13,7 @@ debian10: Debian10.Dockerfile
 ubuntu1604: Ubuntu1604.Dockerfile
 	docker build --rm -f $< ..
 
-ubuntu1704: Ubuntu1704.Dockerfile
+ubuntu1804: Ubuntu1804.Dockerfile
 	docker build --rm -f $< ..
 
 arch: ArchLinux.Dockerfile

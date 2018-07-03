@@ -1,0 +1,5 @@
+jobs:
+  debian10:
+    steps:
+      - setup_remote_docker
+      - cd docker && make debian10

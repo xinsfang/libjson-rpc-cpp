@@ -42,7 +42,7 @@ MicroHttpServer::MicroHttpServer(int port)
 
 bool MicroHttpServer::EnableTLS(const std::string &sslcert, const std::string &sslkey) {
 
-  if (this->running || MHD_is_feature_supported(MHD_FEATURE_TLS) != MHD_YES) {
+  if (this->running || MHD_is_feature_supported(MHD_FEATURE_SSL) != MHD_YES) {
     return false;
   }
   
@@ -61,7 +61,7 @@ bool MicroHttpServer::StartListening() {
   unsigned int mhd_flags = MHD_USE_THREAD_PER_CONNECTION;
   if (!this->running) {
     if (this->enableTLS) {
-      mhd_flags |= MHD_USE_TLS;
+      mhd_flags |= MHD_USE_SSL;
       this->daemon = MHD_start_daemon(mhd_flags, this->port, NULL, NULL, MicroHttpServer::callback, this,
                                       MHD_OPTION_HTTPS_MEM_KEY, this->sslkey.c_str(),
                                       MHD_OPTION_HTTPS_MEM_CERT, this->sslcert.c_str(), MHD_OPTION_END);
