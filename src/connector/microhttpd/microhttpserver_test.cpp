@@ -1,6 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include <curl/curl.h>
-#include <catch.hpp>
+#include <catch/catch.hpp>
 
 #include <string>
 
