@@ -1,7 +1,8 @@
 
 image: Visual Studio 2017
 clone_folder: c:\projects\libjson-rpc-cpp
-cache: c:\tools\vcpkg\installed\
+cache: 
+  - c:\tools\vcpkg\installed\ -> appveyor.yml
 build_script:
   - cd c:\tools\vcpkg
   - vcpkg integrate install
