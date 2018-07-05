@@ -3,12 +3,11 @@ image: Visual Studio 2017
 clone_folder: c:\projects\libjson-rpc-cpp
 cache: c:\tools\vcpkg\installed\
 build_script:
-  - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
   - cd c:\tools\vcpkg
   - vcpkg integrate install
   - .\vcpkg.exe install catch2:x64-windows curl:x64-windows libmicrohttpd:x64-windows
   - .\vcpkg.exe integrate install
   - cd c:\projects\libjson-rpc-cpp
-  - cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake .
+  - cmake -G "Visual Studio 15 2017 Win64" -DBUILD_SHARED_LIBS=ON -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake .
   - cmake --build .
   - ctest .

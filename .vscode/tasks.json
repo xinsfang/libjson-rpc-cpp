@@ -33,19 +33,25 @@
             "command": "cmake",
             "windows": {
                 "args": [
+                    "-G", "Visual Studio 15 2017 Win64",
                     "-DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake",
                     ".."
-                ]
+                ],
             },
             "osx": {
                 "args": [
+                    "-G", "Ninja",
                     "-DCMAKE_TOOLCHAIN_FILE=/Users/cinemast/vcpkg/scripts/buildsystems/vcpkg.cmake",
                     ".."
                 ]
             },
+            "linux": {
+                "args": [
+                    "-G", "Ninja",
+                    ".."
+                ]
+            },
             "args": [
-                "-G",
-                "Ninja",
                 "-DCMAKE_BUILD_TYPE=Debug"
             ],
             "options": {
@@ -68,7 +74,7 @@
             },
             "group": "build",
             "problemMatcher": [
-                "$gcc"
+                "$gcc", "$msCompile"
             ]
         },
         {
