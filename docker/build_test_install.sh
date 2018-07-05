@@ -8,10 +8,16 @@ then
 	PREFIX=/usr
 fi
 
+CMAKEFLAGS=""
+
+if [ "$OS" == "arch" ]; then
+	CMAKEFLAGS="-DCMAKE_TOOLCHAIN_FILE=/vcpkg/scripts/buildsystems/vcpkg.cmake"
+fi
+
 mkdir -p build && cd build
 
 echo "PREFIX: $PREFIX"
-cmake -G "Ninja" ..
+cmake -G "Ninja" "-DBUILD_SHARED_LIBS=ON" "$CMAKEFLAGS" ..
 cmake --build .
 
 echo "Running test suite"

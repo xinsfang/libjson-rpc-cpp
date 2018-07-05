@@ -5,6 +5,7 @@ ENV OS=ubuntu1604
 COPY docker/install_debs.sh /install_debs.sh
 RUN chmod a+x /install_debs.sh
 RUN /install_debs.sh
+RUN mkdir -p /usr/local/include/catch && ln -sf /usr/include/catch.hpp /usr/local/include/catch/catch.hpp
 
 RUN mkdir /app
 COPY docker/build_test_install.sh /app
