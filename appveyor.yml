@@ -1,6 +1,8 @@
 
 image: Visual Studio 2017
 clone_folder: c:\projects\libjson-rpc-cpp
+environment:
+  APPVEYOR_SAVE_CACHE_ON_ERROR: true
 cache: 
   - c:\tools\vcpkg\installed\ -> appveyor.yml
 build_script:
