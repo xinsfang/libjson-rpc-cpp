@@ -6,9 +6,11 @@ before_install:
   - |
     if [[ "$TRAVIS_OS_NAME" == "osx" ]]
     then
-     brew update
-     brew install jsoncpp argtable curl hiredis redis ninja
-     brew install libmicrohttpd --with-ssl
+      brew update
+      brew install jsoncpp argtable curl hiredis redis ninja wget
+      brew install libmicrohttpd --with-ssl
+      mkdir -p /usr/local/include/catch
+      wget -O /usr/local/include/catch/catch.hpp https://github.com/catchorg/Catch2/releases/download/v2.2.3/catch.hpp
     fi
 
 matrix:
