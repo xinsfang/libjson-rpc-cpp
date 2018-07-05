@@ -9,6 +9,7 @@ set(SO_VERSION    2)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 option(COMPILE_TESTS "compile with testing support" ON)
 option(CONNECTOR_MICROHTTPD "libmicrohttpd based server connector" ON)

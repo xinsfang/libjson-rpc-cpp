@@ -52,7 +52,8 @@
                 ]
             },
             "args": [
-                "-DCMAKE_BUILD_TYPE=Debug"
+                "-DCMAKE_BUILD_TYPE=Debug",
+                "-DBUILD_SHARED_LIBS=ON"
             ],
             "options": {
                 "cwd": "${workspaceFolder}/build"
