@@ -18,8 +18,7 @@ using namespace std;
 struct F {
   MicroHttpServer server;
   TestClienctConnectionHandler handler;
-  F() : server(TEST_PORT) {
-    server.AddConnectionHandler(handler);
+  F() : server(TEST_PORT, {handler}) {
     REQUIRE(server.StartListening() == true);
   }
 
@@ -95,7 +94,8 @@ TEST_CASE_METHOD(F, "http_post", TEST_MODULE) {
 }
 
 TEST_CASE("https_invalid_paths", TEST_MODULE) {
-  MicroHttpServer server(TEST_PORT);
+  TestClienctConnectionHandler handler;
+  MicroHttpServer server(TEST_PORT, {handler});
   REQUIRE(server.EnableTLS("/a/b/c", "/d/e/f") == false);
   REQUIRE(server.StartListening() == true);
   REQUIRE(server.EnableTLS("server.pem", "server.key") == false);
@@ -106,10 +106,9 @@ TEST_CASE("https_valid_startup", TEST_MODULE) {
   if (!MHD_is_feature_supported(MHD_FEATURE_SSL)) {
     WARN("HTTPS won't be tested due to missing TLS support in libmicrohttpd");
   } else {
-    MicroHttpServer server(TEST_PORT);
     TestClienctConnectionHandler handler;
+    MicroHttpServer server(TEST_PORT, {handler});
     handler.response = "This is a microhttpd response";
-    server.AddConnectionHandler(handler);
 
     REQUIRE(server.EnableTLS("server.pem", "server.key") == true);
     REQUIRE(server.StartListening() == true);

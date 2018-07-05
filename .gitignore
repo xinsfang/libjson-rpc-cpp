@@ -51,3 +51,5 @@ lib
 gen
 win32-deps
 **/*.dir/*
+
+\.vscode/settings\.json

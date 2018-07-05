@@ -6,6 +6,6 @@ namespace jsonrpc {
   class IClientConnectionHandler {
    public:
     virtual ~IClientConnectionHandler() {}
-    virtual std::string HandleRequest(const std::string& request) = 0;
+    virtual bool HandleRequest(const std::string& request, std::string& response) = 0;
   };
 }

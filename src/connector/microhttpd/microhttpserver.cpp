@@ -31,8 +31,8 @@ std::string GetFileContent(const string &filename) {
   return target;
 }
 
-MicroHttpServer::MicroHttpServer(int port)
-    : AbstractServerConnector(),
+MicroHttpServer::MicroHttpServer(int port, ConnectionHandlers handlers)
+    : AbstractServerConnector(handlers),
       port(port),
       running(false),
       enableTLS(false),
@@ -41,11 +41,10 @@ MicroHttpServer::MicroHttpServer(int port)
       daemon(NULL) {}
 
 bool MicroHttpServer::EnableTLS(const std::string &sslcert, const std::string &sslkey) {
-
   if (this->running || MHD_is_feature_supported(MHD_FEATURE_SSL) != MHD_YES) {
     return false;
   }
-  
+
   this->sslcert = GetFileContent(sslcert);
   this->sslkey = GetFileContent(sslkey);
 
@@ -135,13 +134,8 @@ int MicroHttpServer::callback(void *cls, MHD_Connection *connection, const char 
       return MHD_YES;
     } else {
       string response = client_connection->server->ProcessRequest(client_connection->request.str());
-      if (response == "") {
-        client_connection->code = MHD_HTTP_INTERNAL_SERVER_ERROR;
-        client_connection->server->SendResponse("No client connection handler found", client_connection);
-      } else {
-        client_connection->code = MHD_HTTP_OK;
-        client_connection->server->SendResponse(response, client_connection);
-      }
+      client_connection->code = MHD_HTTP_OK;
+      client_connection->server->SendResponse(response, client_connection);
     }
   } else if (string("OPTIONS") == method) {
     client_connection->code = MHD_HTTP_OK;
@@ -152,6 +146,5 @@ int MicroHttpServer::callback(void *cls, MHD_Connection *connection, const char 
   }
   delete client_connection;
   *con_cls = NULL;
-
   return MHD_YES;
 }
