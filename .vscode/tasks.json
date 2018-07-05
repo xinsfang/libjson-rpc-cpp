@@ -19,12 +19,8 @@
                 ]
             },
             "windows": {
-                "command": "New-Item -ItemType Directory -Force -Path",
+                "command": "mkdir",
                 "args": [
-                    "-ItemType",
-                    "Directory",
-                    "-Force",
-                    "-Path",
                     "build"
                 ]
             },

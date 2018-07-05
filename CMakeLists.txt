@@ -15,9 +15,9 @@ option(CONNECTOR_MICROHTTPD "libmicrohttpd based server connector" ON)
 
 include(GNUInstallDirs)
 
-if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" OR "${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
+if (${CMAKE_CXX_COMPILER_ID} MATCHES "Clang" OR ${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wformat -Wno-format-extra-args -Wformat-security -Wformat-nonliteral -Wformat=2 -Wextra -Wnon-virtual-dtor")
-elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES "MSVC")
+elseif (${CMAKE_CXX_COMPILER_ID} MATCHES "MSVC")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
 endif()
 
