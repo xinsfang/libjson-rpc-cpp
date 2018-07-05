@@ -28,6 +28,8 @@ if(COMPILE_TESTS)
   include_directories(${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include)
 endif()
 
+add_subdirectory(src/connector)
+
 if(CONNECTOR_MICROHTTPD)
   add_subdirectory(src/connector/microhttpd)
 endif()

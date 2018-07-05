@@ -21,7 +21,7 @@ cmake -G "Ninja" "-DBUILD_SHARED_LIBS=ON" "$CMAKEFLAGS" ..
 cmake --build .
 
 echo "Running test suite"
-ctest -V --timeout 3
+ctest -V --timeout 60
 
 # if [ "$OS" != "osx" ]
 # then
