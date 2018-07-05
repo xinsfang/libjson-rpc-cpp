@@ -4,7 +4,7 @@ clone_folder: c:\projects\libjson-rpc-cpp
 environment:
   APPVEYOR_SAVE_CACHE_ON_ERROR: true
 cache: 
-  - c:\tools\vcpkg\installed\ -> appveyor.yml
+  - c:\tools\vcpkg\installed\
 build_script:
   - cd c:\tools\vcpkg
   - vcpkg integrate install
@@ -13,4 +13,4 @@ build_script:
   - cd c:\projects\libjson-rpc-cpp
   - cmake -G "Visual Studio 15 2017 Win64" -DBUILD_SHARED_LIBS=ON -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake .
   - cmake --build .
-  - ctest -V --timeout 3 .
+  - ctest -V .
