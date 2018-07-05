@@ -13,4 +13,4 @@ build_script:
   - cd c:\projects\libjson-rpc-cpp
   - cmake -G "Visual Studio 15 2017 Win64" -DBUILD_SHARED_LIBS=ON -DCMAKE_TOOLCHAIN_FILE=c:/tools/vcpkg/scripts/buildsystems/vcpkg.cmake .
   - cmake --build .
-  - ctest .
+  - ctest -V --timeout 3 .
