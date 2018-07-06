@@ -15,3 +15,14 @@ install(TARGETS jsonrpccpp-connector-curl
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/jsonrpccpp/connector/curl
 )
+
+if(COMPILE_TESTS)
+  if (NOT TARGET jsonrpccpp-connector-microhttpd)
+    add_subdirectory(../microhttpd ${CMAKE_BINARY_DIR}/src/connector/microhttpd)
+  endif()
+  file(COPY ${CMAKE_SOURCE_DIR}/src/examples/server.key ${CMAKE_SOURCE_DIR}/src/examples/server.pem DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+  add_executable(jsonrpccpp-connector-curl-test curlclient_test.cpp)
+  target_link_libraries(jsonrpccpp-connector-curl-test jsonrpccpp-connector-curl jsonrpccpp-connector-microhttpd)
+  add_test(connector-curl ${CMAKE_BINARY_DIR}/jsonrpccpp-connector-curl-test --durations yes)
+
+endif()

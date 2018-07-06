@@ -12,8 +12,6 @@ namespace jsonrpc {
     CurlClient(const std::string &url, long timeout = 0, bool verifyTLS = true);
     virtual std::string SendRPCMessage(const std::string &message);
 
-    void setTLSVerification(bool enabled);
-
     void AddHeader(const std::string &attr, const std::string &val);
     void RemoveHeader(const std::string &attr);
 

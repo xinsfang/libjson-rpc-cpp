@@ -43,11 +43,8 @@ string CurlClient::SendRPCMessage(const string &message) {
   curl_easy_setopt(curl, CURLOPT_POSTFIELDS, message.c_str());
   curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
   curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
-
-  if (!this->verifyTLS) {
-    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
-    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, false);
-  }
+  curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, this->verifyTLS);
+  curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, this->verifyTLS); 
 
   CURLcode res = curl_easy_perform(curl);
   long http_code = 0;
@@ -56,13 +53,9 @@ string CurlClient::SendRPCMessage(const string &message) {
   curl_slist_free_all(headers);
   curl_easy_cleanup(curl);
 
-  if (res == 7) {
-    throw JsonRpcException(ExceptionCode::ERROR_CLIENT_CONNECTOR, "Could not connect to " + this->url);
-  } else if (res == 28) {
-    throw JsonRpcException(ExceptionCode::ERROR_CLIENT_CONNECTOR, "Operation timed out " + this->url);
-  } else if (res != CURLE_OK) {
+ if (res != CURLE_OK) {
     stringstream message;
-    message << "Unkown libcurl error " << res << ": " << curl_easy_strerror(res);
+    message << "libcurl error " << res << ", " << curl_easy_strerror(res);
     throw JsonRpcException(ExceptionCode::ERROR_CLIENT_CONNECTOR, message.str());
   } else if (http_code != 200) {
     stringstream message;

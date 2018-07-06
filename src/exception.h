@@ -15,6 +15,8 @@ namespace jsonrpc {
       this->message = str.str();
     }
 
+    int GetCode() { return code; }
+
     virtual const char* what() const throw() { return message.c_str(); }
 
    private:
