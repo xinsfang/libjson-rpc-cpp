@@ -36,6 +36,7 @@ string CurlClient::SendRPCMessage(const string &message) {
     headers = curl_slist_append(headers, (header.first + ": " + header.second).c_str());
   }
 
+  curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
   curl_easy_setopt(curl, CURLOPT_URL, this->url.c_str());
   curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
   curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, timeout);
