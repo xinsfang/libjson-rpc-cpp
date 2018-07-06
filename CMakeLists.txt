@@ -13,7 +13,10 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 option(COMPILE_TESTS "compile with testing support" ON)
+option(JSONRPC_SERVER "jsonrpc server" ON)
+option(JSONRPC_CLIENT "jsonrpc client" ON)
 option(CONNECTOR_MICROHTTPD "libmicrohttpd based server connector" ON)
+option(CONNECTOR_CURL "libcurl based client connector" ON)
 
 include(GNUInstallDirs)
 
@@ -35,4 +38,7 @@ if(CONNECTOR_MICROHTTPD)
   add_subdirectory(src/connector/microhttpd)
 endif()
 
+if(CONNECTOR_CURL)
+  add_subdirectory(src/connector/curl)
+endif()
 

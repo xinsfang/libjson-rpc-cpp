@@ -1,4 +1,4 @@
-install(FILES iclientconnectionhandler.h abstractserverconnector.h 
+install(FILES iclientconnectionhandler.h abstractserverconnector.h iclientconnector.h
   DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/jsonrpccpp/connector
 )
 
