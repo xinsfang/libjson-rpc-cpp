@@ -6,6 +6,19 @@ include_directories(${MHD_INCLUDE_DIR})
 add_library(jsonrpccpp-connector-microhttpd microhttpserver.h microhttpserver.cpp)
 target_link_libraries(jsonrpccpp-connector-microhttpd ${MHD_LIBRARIES})
 
+set_target_properties(jsonrpccpp-connector-microhttpd PROPERTIES
+  PUBLIC_HEADER "microhttpserver.h"
+  SOVERSION ${SO_VERSION}
+  VERSION ${VERSION_STRING}
+)
+
+install(TARGETS jsonrpccpp-connector-microhttpd 
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+  PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/jsonrpccpp/connector/microhttpd
+)
+
 if(COMPILE_TESTS)
   find_package(CURL REQUIRED)
 
