@@ -12,6 +12,8 @@ set_target_properties(jsonrpccpp-connector-microhttpd PROPERTIES
   VERSION ${VERSION_STRING}
 )
 
+configure_file(jsonrpccpp-connector-microhttpd.pc.in ${CMAKE_BINARY_DIR}/jsonrpccpp-connector-microhttpd.pc @ONLY)
+
 install(TARGETS jsonrpccpp-connector-microhttpd 
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -19,11 +21,13 @@ install(TARGETS jsonrpccpp-connector-microhttpd
   PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/jsonrpccpp/connector/microhttpd
 )
 
+install(FILES ${CMAKE_BINARY_DIR}/jsonrpccpp-connector-microhttpd.pc 
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+)
+
 if(COMPILE_TESTS)
   find_package(CURL REQUIRED)
-
   file(COPY ${CMAKE_SOURCE_DIR}/src/examples/server.key ${CMAKE_SOURCE_DIR}/src/examples/server.pem DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-
   add_executable(jsonrpccpp-connector-microhttpd-test microhttpserver_test.cpp)
   target_link_libraries(jsonrpccpp-connector-microhttpd-test PRIVATE jsonrpccpp-connector-microhttpd ${CURL_LIBRARIES})
   add_test(connector-microhttpd jsonrpccpp-connector-microhttpd-test --durations yes)
