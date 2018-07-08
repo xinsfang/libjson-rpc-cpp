@@ -1,10 +1,10 @@
 #define CATCH_CONFIG_MAIN
+#include "curlclient.h"
 #include <catch/catch.hpp>
 #include <iostream>
+#include "../../exception.h"
 #include "../microhttpd/microhttpserver.h"
 #include "../testclientconnectionhandler.h"
-#include "../../exception.h"
-#include "curlclient.h"
 
 #define TEST_MODULE "[connector-curl]"
 
@@ -13,7 +13,6 @@
 
 using namespace jsonrpc;
 using namespace std;
-
 
 struct F {
   TestClienctConnectionHandler handler;
@@ -26,7 +25,6 @@ struct F {
   }
 };
 
-
 TEST_CASE_METHOD(F, "curl_post_success", TEST_MODULE) {
   string response = client.SendRPCMessage("this is a request");
 
@@ -35,14 +33,15 @@ TEST_CASE_METHOD(F, "curl_post_success", TEST_MODULE) {
 }
 
 TEST_CASE("curl_invalid_url", TEST_MODULE) {
-  CurlClient client("http://someinvalidurl/asdf", 1000);
+  CurlClient client("http://someinvalidurl/asdf", 100);
   try {
     client.SendRPCMessage("this is a request");
     FAIL("No invalid url exception has been thrown");
   } catch (JsonRpcException e) {
     REQUIRE(e.GetCode() == -32003);
     string message = e.what();
-    REQUIRE(message == "JsonRpcException -32003: libcurl error 6, Couldn't resolve host name");
+    REQUIRE(message == "JsonRpcException -32003: libcurl error 6, Couldn't resolve host name" ||
+            message == "JsonRpcException -32003: libcurl error 28, Timeout was reached");
   }
 }
 
@@ -71,9 +70,11 @@ TEST_CASE_METHOD(F, "curl_tls_invalid", TEST_MODULE) {
       client.SendRPCMessage("request");
       FAIL("No tls exception has been thrown");
     } catch (JsonRpcException e) {
-        REQUIRE(e.GetCode() == -32003);
-        string message = e.what();
-        REQUIRE(message == "JsonRpcException -32003: libcurl error 60, Peer certificate cannot be authenticated with given CA certificates");
+      REQUIRE(e.GetCode() == -32003);
+      string message = e.what();
+      REQUIRE(message ==
+              "JsonRpcException -32003: libcurl error 60, Peer certificate cannot be authenticated with "
+              "given CA certificates");
     }
   }
 }
