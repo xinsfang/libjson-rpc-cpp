@@ -1,5 +1,14 @@
 {
     "files.associations": {
-        "__locale": "cpp"
+        "__locale": "cpp",
+        "future": "cpp",
+        "system_error": "cpp",
+        "xstring": "cpp",
+        "xlocale": "cpp",
+        "exception": "cpp",
+        "functional": "cpp",
+        "memory": "cpp",
+        "optional": "cpp",
+        "map": "cpp"
     }
 }

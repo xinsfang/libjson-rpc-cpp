@@ -27,8 +27,10 @@ install(FILES ${CMAKE_BINARY_DIR}/jsonrpccpp-connector-microhttpd.pc
 
 if(COMPILE_TESTS)
   find_package(CURL REQUIRED)
+
+  file(COPY ${CMAKE_SOURCE_DIR}/src/examples/server.key ${CMAKE_SOURCE_DIR}/src/examples/server.pem DESTINATION ${CMAKE_BINARY_DIR})
   file(COPY ${CMAKE_SOURCE_DIR}/src/examples/server.key ${CMAKE_SOURCE_DIR}/src/examples/server.pem DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
   add_executable(jsonrpccpp-connector-microhttpd-test microhttpserver_test.cpp)
   target_link_libraries(jsonrpccpp-connector-microhttpd-test PRIVATE jsonrpccpp-connector-microhttpd ${CURL_LIBRARIES})
-  add_test(connector-microhttpd jsonrpccpp-connector-microhttpd-test --durations yes)
+  add_test(connector-microhttpd ${CMAKE_BINARY_DIR}/jsonrpccpp-connector-microhttpd-test --durations yes)
 endif()

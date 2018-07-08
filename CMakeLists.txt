@@ -8,12 +8,19 @@ set(PATCH_VERSION 0)
 set(SO_VERSION    2)
 set(VERSION_STRING "${MAJOR_VERSION}.${MINOR_VERSION}.${PATCH_VERSION}")
 
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
+
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 option(COMPILE_TESTS "compile with testing support" ON)
+option(JSONRPC_SERVER "jsonrpc server" ON)
+option(JSONRPC_CLIENT "jsonrpc client" ON)
 option(CONNECTOR_MICROHTTPD "libmicrohttpd based server connector" ON)
+option(CONNECTOR_CURL "libcurl based client connector" ON)
 
 include(GNUInstallDirs)
 
@@ -35,4 +42,7 @@ if(CONNECTOR_MICROHTTPD)
   add_subdirectory(src/connector/microhttpd)
 endif()
 
+if(CONNECTOR_CURL)
+  add_subdirectory(src/connector/curl)
+endif()
 
