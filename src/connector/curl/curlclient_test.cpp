@@ -40,8 +40,8 @@ TEST_CASE("curl_invalid_url", TEST_MODULE) {
   } catch (JsonRpcException e) {
     REQUIRE(e.GetCode() == -32003);
     string message = e.what();
-    REQUIRE(message == "JsonRpcException -32003: libcurl error 6, Couldn't resolve host name" ||
-            message == "JsonRpcException -32003: libcurl error 28, Timeout was reached");
+    REQUIRE((message == "JsonRpcException -32003: libcurl error 6, Couldn't resolve host name" ||
+             message == "JsonRpcException -32003: libcurl error 28, Timeout was reached") == true);
   }
 }
 
