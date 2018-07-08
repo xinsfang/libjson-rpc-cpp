@@ -24,10 +24,6 @@ struct F {
     handler.response = "mockresponse";
     REQUIRE(server.StartListening() == true);
   }
-
-
-  
-  
 };
 
 
@@ -39,7 +35,7 @@ TEST_CASE_METHOD(F, "curl_post_success", TEST_MODULE) {
 }
 
 TEST_CASE("curl_invalid_url", TEST_MODULE) {
-  CurlClient client("http://someinvalidurl/asdf", 100);
+  CurlClient client("http://someinvalidurl/asdf", 1000);
   try {
     client.SendRPCMessage("this is a request");
     FAIL("No invalid url exception has been thrown");
