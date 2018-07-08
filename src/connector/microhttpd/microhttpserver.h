@@ -18,6 +18,7 @@ namespace jsonrpc {
      * @param port on which the server is listening
     */
     MicroHttpServer(int port, ConnectionHandlers handlers);
+    virtual ~MicroHttpServer();
 
     /**
      * @brief enable TLS support of libmicrohttpd through gnutls.

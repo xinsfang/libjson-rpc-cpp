@@ -40,6 +40,8 @@ MicroHttpServer::MicroHttpServer(int port, ConnectionHandlers handlers)
       sslkey(""),
       daemon(NULL) {}
 
+MicroHttpServer::~MicroHttpServer() { this->StopListening(); }
+
 bool MicroHttpServer::EnableTLS(const std::string &sslcert, const std::string &sslkey) {
   if (this->running || MHD_is_feature_supported(MHD_FEATURE_SSL) != MHD_YES) {
     return false;

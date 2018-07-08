@@ -22,8 +22,12 @@ struct F {
 
   F() : server(TEST_PORT, {handler}), client(CLIENT_URL, 1000, false) {
     handler.response = "mockresponse";
-    server.StartListening();
+    REQUIRE(server.StartListening() == true);
   }
+
+
+  
+  
 };
 
 
@@ -35,7 +39,7 @@ TEST_CASE_METHOD(F, "curl_post_success", TEST_MODULE) {
 }
 
 TEST_CASE("curl_invalid_url", TEST_MODULE) {
-  CurlClient client("http://someinvalidurl/asdf", 100000);
+  CurlClient client("http://someinvalidurl/asdf", 100);
   try {
     client.SendRPCMessage("this is a request");
     FAIL("No invalid url exception has been thrown");
@@ -47,10 +51,11 @@ TEST_CASE("curl_invalid_url", TEST_MODULE) {
 }
 
 TEST_CASE_METHOD(F, "curl_timeout", TEST_MODULE) {
-  handler.timeout = 5000;
+  CurlClient client(CLIENT_URL, 10);
+  handler.timeout = 12;
   try {
     client.SendRPCMessage("this is a request");
-    FAIL("No invalid url exception has been thrown");
+    FAIL("No timeout exception has been thrown");
   } catch (JsonRpcException e) {
     REQUIRE(e.GetCode() == -32003);
     string message = e.what();
@@ -72,7 +77,7 @@ TEST_CASE_METHOD(F, "curl_tls_invalid", TEST_MODULE) {
     } catch (JsonRpcException e) {
         REQUIRE(e.GetCode() == -32003);
         string message = e.what();
-        REQUIRE(message == "JsonRpcException -32003: libcurl error 35, SSL connect error");
+        REQUIRE(message == "JsonRpcException -32003: libcurl error 60, Peer certificate cannot be authenticated with given CA certificates");
     }
   }
 }

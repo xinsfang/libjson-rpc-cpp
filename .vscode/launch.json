@@ -9,10 +9,10 @@
             "name": "(lldb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/src/connector/microhttpd/jsonrpccpp-connector-microhttpd-test",
+            "program": "${workspaceFolder}/build/jsonrpccpp-connector-curl-test",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/build/src/connector/microhttpd",
+            "cwd": "${workspaceFolder}/build/",
             "environment": [],
             "externalConsole": false,
             "MIMode": "lldb"
@@ -24,7 +24,7 @@
             "program": "${workspaceFolder}/build/src/connector/curl/Debug/jsonrpccpp-connector-curl-test.exe",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/build",
             "environment": [],
             "externalConsole": true
         }
