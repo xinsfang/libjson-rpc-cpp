@@ -22,7 +22,18 @@ option(JSONRPC_CLIENT "jsonrpc client" ON)
 option(CONNECTOR_MICROHTTPD "libmicrohttpd based server connector" ON)
 option(CONNECTOR_CURL "libcurl based client connector" ON)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+
 include(GNUInstallDirs)
+include(CodeCoverage)
+
+APPEND_COVERAGE_COMPILER_FLAGS()
+set(COVERAGE_EXCLUDES '/usr/*')
+SETUP_TARGET_FOR_COVERAGE(
+     NAME coverage                    # New target name
+     EXECUTABLE ctest .
+     DEPENDENCIES build
+)
 
 if (${CMAKE_CXX_COMPILER_ID} MATCHES "Clang" OR ${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wformat -Wno-format-extra-args -Wformat-security -Wformat-nonliteral -Wformat=2 -Wextra -Wnon-virtual-dtor")
