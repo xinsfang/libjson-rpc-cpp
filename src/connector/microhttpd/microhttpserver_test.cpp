@@ -4,7 +4,7 @@
 
 #include <string>
 
-#include "../testclientconnectionhandler.h"
+#include "../test_clientconnectionhandler.h"
 #include "microhttpserver.h"
 
 using namespace jsonrpc;

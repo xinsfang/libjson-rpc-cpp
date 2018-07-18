@@ -28,7 +28,7 @@ include(GNUInstallDirs)
 include(CodeCoverage)
 
 APPEND_COVERAGE_COMPILER_FLAGS()
-set(COVERAGE_EXCLUDES '/usr/*')
+set(COVERAGE_EXCLUDES '/usr/*' '*/v1/*' '*/catch.hpp' '*/test_*' '*_test.cpp')
 SETUP_TARGET_FOR_COVERAGE(
      NAME coverage
      EXECUTABLE ctest .

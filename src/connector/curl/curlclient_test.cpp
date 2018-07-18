@@ -4,7 +4,7 @@
 #include <iostream>
 #include "../../exception.h"
 #include "../microhttpd/microhttpserver.h"
-#include "../testclientconnectionhandler.h"
+#include "../test_clientconnectionhandler.h"
 
 #define TEST_MODULE "[connector-curl]"
 

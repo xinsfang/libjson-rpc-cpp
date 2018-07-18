@@ -4,7 +4,7 @@
 #include <string>
 
 #include "abstractserverconnector.h"
-#include "testclientconnectionhandler.h"
+#include "test_clientconnectionhandler.h"
 
 using namespace jsonrpc;
 using namespace std;

@@ -22,7 +22,7 @@ namespace jsonrpc {
     virtual bool StartListening() = 0;
     virtual bool StopListening() = 0;
 
-    std::string ProcessRequest(const std::string& request) {
+    virtual std::string ProcessRequest(const std::string& request) {
       std::string result = "";
       for (auto handler : connectionHandlers) {
         if (handler.get().HandleRequest(request, result)) {
