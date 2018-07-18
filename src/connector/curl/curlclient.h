@@ -13,7 +13,6 @@ namespace jsonrpc {
     virtual std::string SendRPCMessage(const std::string &message);
 
     void AddHeader(const std::string &attr, const std::string &val);
-    void RemoveHeader(const std::string &attr);
 
    private:
     std::map<std::string, std::string> headers;

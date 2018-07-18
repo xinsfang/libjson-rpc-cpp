@@ -67,5 +67,3 @@ string CurlClient::SendRPCMessage(const string &message) {
 }
 
 void CurlClient::AddHeader(const std::string &attr, const std::string &val) { this->headers[attr] = val; }
-
-void CurlClient::RemoveHeader(const std::string &attr) { this->headers.erase(attr); }

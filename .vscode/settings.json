@@ -9,6 +9,17 @@
         "functional": "cpp",
         "memory": "cpp",
         "optional": "cpp",
-        "map": "cpp"
-    }
+        "map": "cpp",
+        "__config": "cpp",
+        "__nullptr": "cpp",
+        "cstddef": "cpp",
+        "initializer_list": "cpp",
+        "new": "cpp",
+        "stdexcept": "cpp",
+        "type_traits": "cpp",
+        "typeinfo": "cpp",
+        "algorithm": "cpp",
+        "regex": "cpp"
+    },
+    "lcov.path": "build/coverage.info"
 }

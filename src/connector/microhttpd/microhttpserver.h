@@ -2,9 +2,20 @@
 
 #include <microhttpd.h>
 #include <map>
+#include <sstream>
 #include "../abstractserverconnector.h"
 
 namespace jsonrpc {
+  class MicroHttpServer;
+
+  struct mhd_coninfo {
+    struct MHD_PostProcessor *postprocessor;
+    MHD_Connection *connection;
+    std::stringstream request;
+    MicroHttpServer *server;
+    int code;
+  };
+
   /**
    * This class provides an embedded HTTP Server, based on libmicrohttpd, to
    * handle incoming Requests and send HTTP 1.1 valid responses. Note that this
@@ -16,7 +27,7 @@ namespace jsonrpc {
     /**
      * @brief MicroHttpServer, constructor for the included libmicrohttpd based HttpServer
      * @param port on which the server is listening
-    */
+     */
     MicroHttpServer(int port, ConnectionHandlers handlers);
     virtual ~MicroHttpServer();
 
@@ -32,8 +43,8 @@ namespace jsonrpc {
     virtual bool StopListening();
 
    protected:
-    bool virtual SendResponse(const std::string &response, void *addInfo = NULL);
-    bool virtual SendOptionsResponse(void *addInfo);
+    virtual bool SendResponse(const std::string &response, struct mhd_coninfo *client_connection = NULL);
+    virtual bool SendOptionsResponse(struct mhd_coninfo *client_connection);
 
    private:
     int port;

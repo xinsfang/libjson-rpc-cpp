@@ -25,6 +25,17 @@ struct F {
   }
 };
 
+class FailingHttpServer : public MicroHttpServer {
+ public:
+  FailingHttpServer(int port, ConnectionHandlers handlers) : MicroHttpServer(port, handlers) {}
+
+ protected:
+  virtual bool SendResponse(const std::string &response, struct mhd_coninfo *client_connection) {
+    client_connection->code = 500;
+    return MicroHttpServer::SendResponse(response, client_connection);
+  }
+};
+
 TEST_CASE_METHOD(F, "curl_post_success", TEST_MODULE) {
   string response = client.SendRPCMessage("this is a request");
 
@@ -94,4 +105,24 @@ TEST_CASE_METHOD(F, "curl_tls_valid", TEST_MODULE) {
       FAIL("No tls exception expected");
     }
   }
+}
+
+TEST_CASE("non_404_status_code", TEST_MODULE) {
+  TestClienctConnectionHandler handler;
+  handler.response = "testresponse";
+  FailingHttpServer server(TEST_PORT, {handler});
+  CurlClient client(CLIENT_URL);
+
+  server.StartListening();
+
+  try {
+    string result = client.SendRPCMessage("testrequest");
+    FAIL("Exception expected, due to 500 status code return");
+  } catch (JsonRpcException e) {
+    REQUIRE(e.GetCode() ==  -32003);
+    string message = e.what();
+    REQUIRE(message == "JsonRpcException -32003: Received HTTP status code 500: testresponse");
+  }
+
+  server.StopListening();
 }

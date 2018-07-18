@@ -2,21 +2,12 @@
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
-#include <sstream>
 #include <string>
 
 using namespace jsonrpc;
 using namespace std;
 
 #define BUFFERSIZE 65536
-
-struct mhd_coninfo {
-  struct MHD_PostProcessor *postprocessor;
-  MHD_Connection *connection;
-  stringstream request;
-  MicroHttpServer *server;
-  int code;
-};
 
 std::string GetFileContent(const string &filename) {
   string target;
@@ -88,8 +79,7 @@ bool MicroHttpServer::StopListening() {
   return false;
 }
 
-bool MicroHttpServer::SendResponse(const string &response, void *addInfo) {
-  struct mhd_coninfo *client_connection = static_cast<struct mhd_coninfo *>(addInfo);
+bool MicroHttpServer::SendResponse(const string &response, struct mhd_coninfo *client_connection) {
   struct MHD_Response *result =
       MHD_create_response_from_buffer(response.size(), (void *)response.c_str(), MHD_RESPMEM_MUST_COPY);
 
@@ -101,8 +91,7 @@ bool MicroHttpServer::SendResponse(const string &response, void *addInfo) {
   return ret == MHD_YES;
 }
 
-bool MicroHttpServer::SendOptionsResponse(void *addInfo) {
-  struct mhd_coninfo *client_connection = static_cast<struct mhd_coninfo *>(addInfo);
+bool MicroHttpServer::SendOptionsResponse(struct mhd_coninfo *client_connection) {
   struct MHD_Response *result = MHD_create_response_from_buffer(0, NULL, MHD_RESPMEM_MUST_COPY);
 
   MHD_add_response_header(result, "Allow", "POST, OPTIONS");
