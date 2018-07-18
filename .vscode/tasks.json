@@ -5,11 +5,14 @@
             "label": "coverage",
             "type": "shell",
             "command": "ninja",
+            "args": [
+                "coverage"
+            ],
             "options": {
                 "cwd": "build"
             },
             "group": "build"
-        }
+        },
         {
             "label": "create-build",
             "type": "shell",

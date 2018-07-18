@@ -30,7 +30,7 @@ include(CodeCoverage)
 APPEND_COVERAGE_COMPILER_FLAGS()
 set(COVERAGE_EXCLUDES '/usr/*')
 SETUP_TARGET_FOR_COVERAGE(
-     NAME coverage                    # New target name
+     NAME coverage
      EXECUTABLE ctest .
      DEPENDENCIES build
 )
