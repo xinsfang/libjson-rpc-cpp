@@ -14,6 +14,10 @@ if [ "$OS" == "arch" ]; then
 	CMAKEFLAGS="-DCMAKE_TOOLCHAIN_FILE=/vcpkg/scripts/buildsystems/vcpkg.cmake"
 fi
 
+if [ "$OS" == "osx" ]; then
+	CMAKEFLAGS="-DCOVERAGE=ON"
+fi
+
 mkdir -p build && cd build
 
 echo "PREFIX: $PREFIX"

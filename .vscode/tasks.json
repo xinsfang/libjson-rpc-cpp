@@ -53,12 +53,14 @@
             "osx": {
                 "args": [
                     "-G", "Ninja",
+                    "-DCOVERAGE=ON",
                     "-DCMAKE_TOOLCHAIN_FILE=/Users/cinemast/vcpkg/scripts/buildsystems/vcpkg.cmake",
                     ".."
                 ]
             },
             "linux": {
                 "args": [
+                    "-DCOVERAGE=ON",
                     "-G", "Ninja",
                     ".."
                 ]

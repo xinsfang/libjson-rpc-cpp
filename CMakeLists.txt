@@ -16,6 +16,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
+option(COVERAGE "generate coverage reports" OFF)
 option(COMPILE_TESTS "compile with testing support" ON)
 option(JSONRPC_SERVER "jsonrpc server" ON)
 option(JSONRPC_CLIENT "jsonrpc client" ON)
@@ -25,15 +26,19 @@ option(CONNECTOR_CURL "libcurl based client connector" ON)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 include(GNUInstallDirs)
-include(CodeCoverage)
 
-APPEND_COVERAGE_COMPILER_FLAGS()
-set(COVERAGE_EXCLUDES '/usr/*' '*/v1/*' '*/catch.hpp' '*/test_*' '*_test.cpp')
-SETUP_TARGET_FOR_COVERAGE(
+if (COVERAGE)
+  include(CodeCoverage)
+  APPEND_COVERAGE_COMPILER_FLAGS()
+  set(COVERAGE_EXCLUDES '/usr/*' '*/v1/*' '*/catch.hpp' '*/test_*' '*_test.cpp')
+  SETUP_TARGET_FOR_COVERAGE(
      NAME coverage
      EXECUTABLE ctest .
      DEPENDENCIES build
-)
+  )
+endif()
+
+
 
 if (${CMAKE_CXX_COMPILER_ID} MATCHES "Clang" OR ${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wformat -Wno-format-extra-args -Wformat-security -Wformat-nonliteral -Wformat=2 -Wextra -Wnon-virtual-dtor")
