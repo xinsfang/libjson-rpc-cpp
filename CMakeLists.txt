@@ -46,10 +46,10 @@ elseif (${CMAKE_CXX_COMPILER_ID} MATCHES "MSVC")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
 endif()
 
+include_directories(${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include)
 
 if(COMPILE_TESTS)
   enable_testing()
-  include_directories(${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include)
 endif()
 
 add_subdirectory(src/connector)
@@ -62,3 +62,7 @@ if(CONNECTOR_CURL)
   add_subdirectory(src/connector/curl)
 endif()
 
+
+if(JSONRPC_CLIENT)
+  add_subdirectory(src/client)
+endif()
