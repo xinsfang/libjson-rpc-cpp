@@ -12,7 +12,7 @@ namespace jsonrpc {
 
     const nlohmann::json& getCall() const;
    private:
+    unsigned long nextId;
     nlohmann::json result;
-    long nextId;
   };
 }

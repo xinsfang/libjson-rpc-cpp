@@ -5,7 +5,7 @@
 #include <string>
 
 namespace jsonrpc {
-  enum ExceptionCode { ERROR_CLIENT_CONNECTOR = -32003 };
+  enum ExceptionCode { ERROR_CLIENT_CONNECTOR = -32003, ERROR_INVALID_JSON = -32700 };
 
   class JsonRpcException : public std::exception {
    public:

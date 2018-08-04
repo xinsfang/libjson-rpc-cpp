@@ -1,13 +1,52 @@
 #include "client.h"
+#include "../constants.h"
+#include "../exception.h"
 
 using namespace jsonrpc;
+using namespace std;
 using json = nlohmann::json;
 
-Client::Client(IClientConnector &connector, clientVersion_t version) : connector(connector) {}
+Client::Client(IClientConnector &connector, clientVersion_t version)
+    : connector(connector), version(version), nextId(1) {}
 
-nlohmann::json Client::CallMethod(const std::string &name, const json &parameter) {}
-BatchResponse Client::CallProcedures(const BatchCall &calls) {}
-void Client::CallNotification(const std::string &name, const json &parameter) {}
+bool VerifyResponse(const json &request, const json &response, clientVersion_t version) { return true; }
+
+json Client::CallMethod(const string &name, const json &parameter) {
+  json call;
+
+  if (version == JSONRPC_CLIENT_V2) {
+    call[JSONRPCCPP_VERSION] = "2.0";
+  }
+  call[JSONRPCCPP_METHOD] = name;
+  call[JSONRPCCPP_PARAMS] = parameter;
+  call[JSONRPCCPP_ID] = this->nextId++;
+
+  try {
+    json response = json::parse(connector.SendRPCMessage(call.dump()));
+    if (VerifyResponse(call, response, this->version)) {
+      return response[JSONRPCCPP_RESULT];
+    }
+
+  } catch (json::parse_error e) {
+    throw JsonRpcException(ExceptionCode::ERROR_INVALID_JSON,
+                           string("Failed to parse server response: ") + e.what());
+  }
+}
+
+BatchResponse Client::CallProcedures(const BatchCall &calls) {
+
+}
+void Client::CallNotification(const std::string &name, const json &parameter) {
+  json call;
+
+  if (version == JSONRPC_CLIENT_V2) {
+    call[JSONRPCCPP_VERSION] = "2.0";
+  }
+  call[JSONRPCCPP_METHOD] = name;
+  call[JSONRPCCPP_PARAMS] = parameter;
+
+  connector.SendRPCMessage(call.dump());
+}
 
 /*
 void Client::CallMethod(const std::string &name, const json &parameter, json &result) {

@@ -18,9 +18,7 @@ using namespace std;
 struct F {
   MicroHttpServer server;
   TestClienctConnectionHandler handler;
-  F() : server(TEST_PORT, {handler}) {
-    REQUIRE(server.StartListening() == true);
-  }
+  F() : server(TEST_PORT, {handler}) { REQUIRE(server.StartListening() == true); }
 
   ~F() { server.StopListening(); }
 };

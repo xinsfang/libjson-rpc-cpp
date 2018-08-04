@@ -1,5 +1,6 @@
 #pragma once
 
+#include <atomic>
 #include <nlohmann/json.hpp>
 #include "../connector/iclientconnector.h"
 #include "batchcall.h"
@@ -20,5 +21,7 @@ namespace jsonrpc {
 
    private:
     IClientConnector &connector;
+    clientVersion_t version;
+    std::atomic<unsigned long> nextId;
   };
 }
