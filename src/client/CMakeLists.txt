@@ -9,7 +9,6 @@ add_library(jsonrpccpp-client
 )
 
 if(COMPILE_TESTS)
-  add_executable(jsonrpccpp-client-test client_test.cpp)
-  target_link_libraries(jsonrpccpp-client-test PRIVATE jsonrpccpp-client)
-  add_test(client ${CMAKE_BINARY_DIR}/jsonrpccpp-client-test --durations yes)
+  target_sources(jsonrpccpp-unittest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/client_test.cpp)
+  add_test(connector-client ${CMAKE_BINARY_DIR}/jsonrpccpp-unittest --durations yes "[client]")
 endif()

@@ -27,19 +27,6 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 include(GNUInstallDirs)
 
-if (COVERAGE)
-  include(CodeCoverage)
-  APPEND_COVERAGE_COMPILER_FLAGS()
-  set(COVERAGE_EXCLUDES '/usr/*' '*/v1/*' '*/catch.hpp' '*/test_*' '*_test.cpp')
-  SETUP_TARGET_FOR_COVERAGE(
-     NAME coverage
-     EXECUTABLE ctest .
-     DEPENDENCIES build
-  )
-endif()
-
-
-
 if (${CMAKE_CXX_COMPILER_ID} MATCHES "Clang" OR ${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wformat -Wno-format-extra-args -Wformat-security -Wformat-nonliteral -Wformat=2 -Wextra -Wnon-virtual-dtor")
 elseif (${CMAKE_CXX_COMPILER_ID} MATCHES "MSVC")
@@ -48,8 +35,10 @@ endif()
 
 include_directories(${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include)
 
+
 if(COMPILE_TESTS)
-  enable_testing()
+  set(TEST_LIBRARIES "")
+  add_subdirectory(src/test)
 endif()
 
 add_subdirectory(src/connector)

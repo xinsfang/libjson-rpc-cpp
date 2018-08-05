@@ -1,6 +1,4 @@
-#define CATCH_CONFIG_MAIN
 #include <catch/catch.hpp>
-
 #include <string>
 
 #include "abstractserverconnector.h"
@@ -9,7 +7,7 @@
 using namespace jsonrpc;
 using namespace std;
 
-#define TEST_MODULE "[abstractserverconnector]"
+#define TEST_MODULE "abstractserverconnector"
 
 class TestServerConnector : public AbstractServerConnector {
  public:

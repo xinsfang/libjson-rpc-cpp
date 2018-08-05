@@ -3,7 +3,7 @@ install(FILES iclientconnectionhandler.h abstractserverconnector.h iclientconnec
 )
 
 if(COMPILE_TESTS)
-  add_executable(jsonrpccpp-abstractserverconnector-test abstractserverconnector_test.cpp)
-  add_test(connector-abstractserverconnector ${CMAKE_BINARY_DIR}/jsonrpccpp-abstractserverconnector-test --durations yes)
+  target_sources(jsonrpccpp-unittest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/abstractserverconnector_test.cpp)
+  add_test(connector-abstractserverconnector ${CMAKE_BINARY_DIR}/jsonrpccpp-unittest --durations yes "abstractserverconnector")
 endif()
 
