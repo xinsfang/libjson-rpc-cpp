@@ -13,7 +13,10 @@ RUN dnf -y install \
     make \
     argtable-devel \
     hiredis-devel \
-    redis
+    redis \
+    wget 
+
+RUN mkdir -p /usr/local/include/nlohmann && wget https://raw.githubusercontent.com/nlohmann/json/master/single_include/nlohmann/json.hpp -O /usr/local/include/nlohmann/json.hpp
 
 RUN mkdir /app
 COPY docker/build_test_install.sh /app

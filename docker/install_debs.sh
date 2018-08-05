@@ -10,4 +10,8 @@ apt-get install -y \
     libmicrohttpd-dev \
     libhiredis-dev \
     redis-server \
-    catch
+    catch \
+    wget
+
+mkdir -p /usr/local/include/nlohmann
+wget https://raw.githubusercontent.com/nlohmann/json/master/single_include/nlohmann/json.hpp -O /usr/local/include/nlohmann/json.hpp
