@@ -1,4 +1,3 @@
-#define CATCH_CONFIG_MAIN
 #include "curlclient.h"
 #include <catch/catch.hpp>
 #include <iostream>

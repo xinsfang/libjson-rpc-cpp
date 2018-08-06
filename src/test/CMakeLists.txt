@@ -15,3 +15,13 @@ add_executable(jsonrpccpp-unittest main.cpp)
 if(JSONRPC_CLIENT)
   target_link_libraries(jsonrpccpp-unittest jsonrpccpp-client)
 endif()
+
+if(CONNECTOR_MICROHTTPD)
+  find_package(CURL REQUIRED)
+  target_link_libraries(jsonrpccpp-unittest jsonrpccpp-connector-microhttpd ${CURL_LIBRARIES})
+endif()
+
+if(CONNECTOR_CURL)
+  find_package(CURL REQUIRED)
+  target_link_libraries(jsonrpccpp-unittest jsonrpccpp-connector-curl jsonrpccpp-connector-microhttpd ${CURL_LIBRARIES})
+endif()
